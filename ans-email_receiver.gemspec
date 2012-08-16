@@ -14,4 +14,7 @@ Gem::Specification.new do |gem|
   gem.name          = "ans-email_receiver"
   gem.require_paths = ["lib"]
   gem.version       = Ans::EmailReceiver::VERSION
+
+  gem.add_development_dependency "shoulda-matchers"
+  gem.add_development_dependency "ans-matchers"
 end
