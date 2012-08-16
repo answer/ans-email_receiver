@@ -35,6 +35,7 @@ Or install it yourself as:
       @queue = :receive
     end
 
+    # mailer
     # job クラスの mail_name に対応したクラス名にする
     class InfoMailer < ApplicationMailer
       include Ans::EmailReceiver::Mailer
@@ -132,6 +133,15 @@ job クラスが見つからない場合、 404 ステータスで ng を表示�
       def delete?(email_receive)
         # 処理後にサーバーのメールを削除する場合、 true を返す
         false
+      end
+    end
+
+    # mailer
+    class InfoMailer < ApplicationMailer
+      include Ans::EmailReceiver::Mailer
+
+      def save(email_receive)
+        # メール受信の処理
       end
     end
 
