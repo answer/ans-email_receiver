@@ -3,19 +3,21 @@
 require "net/pop"
 
 module Ans::EmailReceiver
-  module JobHelper
+  module Job
     def self.included(m)
-      def m.perform
-        new.receive
+      m.send :extend, ClassMethods
+    end
+
+    module ClassMethods
+      def perform
+        new.receive_all
       end
     end
 
-    def receive
+    def receive_all
       Net::POP3.start(config.host, config.port, config.user, config.password) do |pop|
         pop.mails.each do |m|
-          body = m.pop
-          mail = to_mail body
-          model.unique_transaction(mail, body) do |email_receive|
+          EmailReceive.receive(m.pop) do |email_receive|
             mailer.receive email_receive.body
             email_receive.reload
             m.delete if email_receive.is_bounced || delete?(email_receive)
@@ -26,22 +28,18 @@ module Ans::EmailReceiver
 
     private
 
+    def mail_name
+      @mail_name ||= self.class.to_s.gsub(/Receiver$/, "").underscore
+    end
     def config
       @config ||= Config.new mail_name
     end
-    def model
-      EmailReceive
-    end
     def mailer
-      "#{mail_name.downcase.camelize}Mailer".constantize
+      @mailer ||= "#{mail_name.camelize}Mailer".constantize
     end
 
     def delete?(email_receive)
       false
-    end
-
-    def to_mail(body)
-      ReceiveMailer.receive(body)
     end
 
   end
