@@ -13,7 +13,7 @@ module Ans::EmailReceiver
       value "port", "110"
     end
     def user
-      value "user", "user"
+      value "user", @name
     end
     def password
       value "password", "password"
@@ -31,7 +31,7 @@ module Ans::EmailReceiver
       "#{config_prefix}#{@name}_#{name}#{config_suffix}"
     end
     def config_prefix
-      "mail_receive_"
+      "email_receive_"
     end
     def config_suffix
       ""

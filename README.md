@@ -70,28 +70,41 @@ EmailReceive が以下の属性を持つ
 ### 概要
 
 `message_id` を `email_receives` に登録して、処理を二重に実行しないようにする
+
 ブロックの中で例外が発生した場合、 `email_receives` には登録されない
+
 ブロックの最後でメール削除を行うことで、プログラムエラーによるメールの無視を防ぐ
 (予期しない例外が発生した場合、 fix 後にもう一度処理することでそのメールを処理できる)
 
 メーラークラスは、 `"#{mail_name.camelize}Mailer"` が使用される
+
 異なるメーラークラスを使用する場合は `mailer` メソッドをオーバーライドする
 
 メールユーザー、パスワードは SystemSetting から取得される
+
 `MAIL_USER_#{mail_name}`, `MAIL_PASSWORD_#{mail_name}` の設定を参照する
 
 デフォルトでは、エラーメール以外はサーバーからメールを削除しない
+
 削除する場合は `delete?(email_receive)` メソッドで true を返す
+
 `email_receive` は処理した EmailReceive のインスタンス(処理後 reload 済みのやつ)
+
 エラーメールの削除はキャンセルできない
 
 
-オーバーライド可能なメソッドとデフォルト
+### オーバーライド可能なメソッドとデフォルト
 
-* `mail_name` : 設定と、メーラーの呼出に使用される(デフォルト: job クラスの名前から : InfoReceiver → info)
-* `delete?(email_receive)` : 処理後、メールをサーバーから削除するかどうか(デフォルト: `false`)
-* `mailer` : メール受信に使用するメーラー(デフォルト: `"#{MailName}Mailer"`)
-* `config` : 設定を取得する(デフォルト: `Config.new mail_name`)
+    # model
+    class EmailReceive
+      include Ans::EmailReceiver::Model
+
+      private
+
+      def after_bounced
+        # エラーメールの処理
+      end
+    end
 
 
 ## 設定
