@@ -83,17 +83,13 @@ EmailReceive が以下の属性を持つ
 
 メールユーザー、パスワードは SystemSetting から取得される
 
-`MAIL_USER_#{mail_name}`, `MAIL_PASSWORD_#{mail_name}` の設定を参照する
-
 デフォルトでは、エラーメール以外はサーバーからメールを削除しない
 
 削除する場合は `delete?(email_receive)` メソッドで true を返す
 
-`email_receive` は処理した EmailReceive のインスタンス(処理後 reload 済みのやつ)
-
 エラーメールの削除はキャンセルできない
 
-メール受信時、 alias で、メール受信用のアクションを wget で叩くように設定する
+メール受信時、 /etc/aliases で、メール受信用のアクションを wget で叩くように設定する
 
 コントローラでは、指定された job を呼び出す
 
