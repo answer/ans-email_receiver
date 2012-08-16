@@ -55,6 +55,9 @@ Or install it yourself as:
       include Ans::EmailReceiver::Controller
     end
 
+    # config/routes.rb
+    resources :email_receives, only: [:show]
+
     # /etc/aliases
     info: info, |sh -c "/usr/bin/wget '$1' >> /dev/null 2>&1" - "http://mydomain.co.jp/email_receives/info"
 
@@ -92,6 +95,12 @@ EmailReceive が以下の属性を持つ
 
 エラーメールの削除はキャンセルできない
 
+メール受信時、 alias で、メール受信用のアクションを wget で叩くように設定する
+
+コントローラでは、指定された job を呼び出す
+
+job クラスが見つからない場合、 ActiveRecord::RecordNotFound を投げる
+
 
 ### オーバーライド可能なメソッドとデフォルト
 
@@ -103,6 +112,32 @@ EmailReceive が以下の属性を持つ
 
       def after_bounced
         # エラーメールの処理
+      end
+    end
+
+    # job
+    class InfoReceiver
+      include Ans::EmailReceiver::Job
+      @queue = :receive
+
+      private
+
+      def mail_name
+        # mailer の名前、 config の設定名を取得するために使用される
+        @mail_name ||= self.class.to_s.gsub(/Receiver$/, "").underscore
+      end
+      def config
+        # host, port, user, password メソッドを持つオブジェクトを返す
+        @config ||= Config.new mail_name
+      end
+      def mailer
+        # receive 処理を行う mailer を返す
+        @mailer ||= "#{mail_name.camelize}Mailer".constantize
+      end
+
+      def delete?(email_receive)
+        # 処理後にサーバーのメールを削除する場合、 true を返す
+        false
       end
     end
 
