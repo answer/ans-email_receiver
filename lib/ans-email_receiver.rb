@@ -7,5 +7,6 @@ module Ans
     autoload :Config,        "ans-email_receiver/config"
     autoload :ReceiveMailer, "ans-email_receiver/receive_mailer"
     autoload :Mailer,        "ans-email_receiver/mailer"
+    autoload :Controller,    "ans-email_receiver/controller"
   end
 end

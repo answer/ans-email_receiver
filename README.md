@@ -39,10 +39,8 @@ Or install it yourself as:
     class InfoMailer < ApplicationMailer
       include Ans::EmailReceiver::Mailer
 
-      def save(data)
+      def save(email_receive)
         # メール受信の処理
-        #mail = data[:mail]
-        #email_receive = data[:email_receive]
       end
     end
 
@@ -51,15 +49,15 @@ Or install it yourself as:
       description: "info メールの受信処理を行う"
 
     # controller
-    class EmailReceivesController
+    class EmailNotificationsController < ApplicationController
       include Ans::EmailReceiver::Controller
     end
 
     # config/routes.rb
-    resources :email_receives, only: [:show]
+    resources :email_notifications, only: [:show]
 
     # /etc/aliases
-    info: info, |sh -c "/usr/bin/wget '$1' >> /dev/null 2>&1" - "http://mydomain.co.jp/email_receives/info"
+    info: info, |sh -c "/usr/bin/wget '$1' >> /dev/null 2>&1" - "http://mydomain.co.jp/email_notifications/info"
 
 ### 前提
 
@@ -99,7 +97,7 @@ EmailReceive が以下の属性を持つ
 
 コントローラでは、指定された job を呼び出す
 
-job クラスが見つからない場合、 ActiveRecord::RecordNotFound を投げる
+job クラスが見つからない場合、 404 ステータスで ng を表示する
 
 
 ### オーバーライド可能なメソッドとデフォルト
