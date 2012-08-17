@@ -64,7 +64,7 @@ Or install it yourself as:
 
 EmailReceive が以下の属性を持つ
 
-* `message_id` : `string` : メールアドレス
+* `message_id` : `string` : メッセージID **ユニーク**
 * `email` : `string` : メールアドレス
 * `body` : `text` : 本文
 * `is_bounced` : `boolean` : bounce メールか？
