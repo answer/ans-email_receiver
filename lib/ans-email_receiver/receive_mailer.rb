@@ -1,7 +1,13 @@
 # -*- coding: utf-8 -*-
 
 module Ans::EmailReceiver
-  class ReceiveMailer < ActionMailer::Base
+  begin
+    class ReceiveMailer < ApplicationMailer; end
+  rescue NameError
+    class ReceiveMailer < ActionMailer::Base; end
+  end
+
+  class ReceiveMailer
     def receive(m)
       m
     end
