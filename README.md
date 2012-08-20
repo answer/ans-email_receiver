@@ -69,6 +69,16 @@ EmailReceive が以下の属性を持つ
 * `body` : `text` : 本文
 * `is_bounced` : `boolean` : bounce メールか？
 
+* has one `email_queue`
+
+EmailQueue が以下の属性を持つ
+
+* `message_id` : `string` : メッセージID
+* `email_receive_id` : `integer` : bounce メールの ID
+
+EmailQueue 処理時に、 `message_id` を保存する
+
+
 ### 概要
 
 `message_id` を `email_receives` に登録して、処理を二重に実行しないようにする
