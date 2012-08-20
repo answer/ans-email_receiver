@@ -37,7 +37,7 @@ module Ans::EmailReceiver
     end
 
     def mail
-      @mail ||= ReceiveMailer.receive body
+      @mail ||= Mail.new body
     end
 
     def bounced
