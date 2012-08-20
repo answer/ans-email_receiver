@@ -44,10 +44,18 @@ module Ans::EmailReceiver
       self.is_bounced = true
       save
 
+      sync_email_queue
+
       after_bounced
     end
 
     private
+
+    def sync_email_queue
+      mail.parts.each do |part|
+        EmailQueue.where(message_id: Mail.new(part.body).message_id).update_all email_receive_id: id
+      end
+    end
 
     def after_bounced
     end
