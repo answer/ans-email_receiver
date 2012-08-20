@@ -20,7 +20,7 @@ module Ans::EmailReceiver
           EmailReceive.receive(m.pop) do |email_receive|
             mailer.receive email_receive.body
             email_receive.reload
-            m.delete if email_receive.is_bounced || delete?(email_receive)
+            m.delete if email_receive.email_queue.present? || delete?(email_receive)
           end
         end
       end
