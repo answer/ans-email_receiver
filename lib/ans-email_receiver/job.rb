@@ -15,7 +15,10 @@ module Ans::EmailReceiver
     end
 
     def receive_all
-      Net::POP3.start(config.host, config.port, config.user, config.password) do |pop|
+      host, port, user, password = config.host, config.port, config.user, config.password
+      return if [host,port,user,password].any?{|s| s.blank?}
+
+      Net::POP3.start(host, port, user, password) do |pop|
         pop.mails.each do |m|
           EmailReceive.receive(m.pop) do |email_receive|
             mailer.receive email_receive.body
