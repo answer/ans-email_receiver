@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+require "mail"
+
 module Ans::EmailReceiver
   module Model
     def self.included(m)
