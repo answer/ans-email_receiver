@@ -21,6 +21,8 @@ module Ans::EmailReceiver
 
         transaction do
           receive = new
+
+          body.force_encoding "ASCII-8BIT"
           receive.body = body
 
           mail = receive.mail
