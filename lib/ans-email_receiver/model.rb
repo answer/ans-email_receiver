@@ -17,8 +17,6 @@ module Ans::EmailReceiver
     module ClassMethods
 
       def receive(body)
-        old.delete_all
-
         transaction do
           receive = new
 
