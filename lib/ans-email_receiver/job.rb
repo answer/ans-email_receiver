@@ -53,10 +53,11 @@ module Ans::EmailReceiver
     end
 
     def log(e,mail)
-      logger = Logger.new("log/debug.log")
-      logger.debug "========== Encode Error =========="
-      logger.debug "#{e.inspect}"
-      logger.debug mail
+      File.open Rails.root.join("log/debug.log"), "a" do |f|
+        f.puts "========== Encode Error =========="
+        f.puts "#{e.inspect}"
+        f.puts mail
+      end
     end
     def error(e,mail)
     end
