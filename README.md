@@ -36,8 +36,8 @@ Or install it yourself as:
 
       def error(e,mail)
         # エラー時の処理
-        # log/debug.log への出力は自動で行われます
-        # (メールを送信する、等)
+        # (内容を記録、メールを送信する、等)
+        # デフォルトでは何もしません
       end
     end
 
