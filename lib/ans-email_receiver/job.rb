@@ -32,7 +32,6 @@ module Ans::EmailReceiver
         mail.delete if email_receive.email_queue.present? || delete?(email_receive)
       end
     rescue => e
-      log e, body
       error e, body
     end
 
@@ -52,13 +51,6 @@ module Ans::EmailReceiver
       false
     end
 
-    def log(e,mail)
-      File.open Rails.root.join("log/debug.log"), "a" do |f|
-        f.puts "========== Encode Error =========="
-        f.puts "#{e.inspect}"
-        f.puts mail
-      end
-    end
     def error(e,mail)
     end
 
