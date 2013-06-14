@@ -21,14 +21,19 @@ module Ans::EmailReceiver
       EmailReceive.old.delete_all
 
       Net::POP3.start(host, port, user, password) do |pop|
-        pop.mails.each do |m|
-          EmailReceive.receive(m.pop) do |email_receive|
-            mailer.receive email_receive.body
-            email_receive.reload
-            m.delete if email_receive.email_queue.present? || delete?(email_receive)
-          end
-        end
+        pop.mails.each{|mail| receive mail}
       end
+    end
+    def receive(mail)
+      body = mail.pop
+      EmailReceive.receive(body) do |email_receive|
+        mailer.receive email_receive.body
+        email_receive.reload
+        mail.delete if email_receive.email_queue.present? || delete?(email_receive)
+      end
+    rescue => e
+      log e, body
+      error e, body
     end
 
     private
@@ -45,6 +50,15 @@ module Ans::EmailReceiver
 
     def delete?(email_receive)
       false
+    end
+
+    def log(e,mail)
+      logger = Logger.new("log/debug.log")
+      logger.debug "========== Encode Error =========="
+      logger.debug "#{e.inspect}"
+      logger.debug mail
+    end
+    def error(e,mail)
     end
 
   end
