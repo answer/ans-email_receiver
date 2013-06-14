@@ -33,6 +33,12 @@ Or install it yourself as:
     class InfoReceiver
       include Ans::EmailReceiver::Job
       @queue = :receive
+
+      def error(e,mail)
+        # エラー時の処理
+        # log/debug.log への出力は自動で行われます
+        # (メールを送信する、等)
+      end
     end
 
     # mailer
