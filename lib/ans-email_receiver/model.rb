@@ -34,15 +34,13 @@ module Ans::EmailReceiver
         end
 
       rescue ActiveRecord::RecordInvalid
-        unless message
-          receive = new
-          receive.body = body
-          message = receive.mail
-        end
+        receive = new
+        receive.body = pop_mail.pop
+        message = receive.mail
 
-        if email_receive = where(message_id: message.message_id).first
-          email_receive.unique_id = pop_mail.unique_id
-          email_receive.save
+        if receive = where(message_id: message.message_id).first
+          receive.unique_id = pop_mail.unique_id
+          receive.save
         end
       end
 
