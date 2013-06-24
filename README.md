@@ -71,7 +71,7 @@ Or install it yourself as:
 EmailReceive が以下の属性を持つ
 
 * `message_id` : `string` : メッセージID **ユニーク**
-* `unique_id` : `string` : ユニークID **ユニーク**
+* `unique_id` : `string` : ユニークID (処理済みのメールの判定に使用するため、ユニークである必要はない)
 * `email` : `string` : メールアドレス
 * `body` : `binary, limit: 2147483647` : 本文
 * `is_bounced` : `boolean` : bounce メールか？
