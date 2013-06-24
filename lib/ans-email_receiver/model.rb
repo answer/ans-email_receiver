@@ -25,7 +25,6 @@ module Ans::EmailReceiver
 
           message = receive.mail
 
-          receive.unique_id = pop_mail.unique_id
           receive.message_id = message.message_id
           receive.email = Array.wrap(message.from).first
 
@@ -35,6 +34,17 @@ module Ans::EmailReceiver
         end
 
       rescue ActiveRecord::RecordInvalid
+      ensure
+        unless message
+          receive = new
+          receive.body = body
+          message = receive.mail
+        end
+
+        if email_receive = where(message_id: message.message_id).first
+          email_receive.unique_id = pop_mail.unique_id
+          email_receive.save
+        end
       end
 
     end
