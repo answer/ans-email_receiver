@@ -16,16 +16,18 @@ module Ans::EmailReceiver
 
     module ClassMethods
 
-      def receive(body)
+      def receive(pop_mail)
+        body = pop_mail.pop
         transaction do
           receive = new
 
           receive.body = body
 
-          mail = receive.mail
+          message = receive.mail
 
-          receive.message_id = mail.message_id
-          receive.email = Array.wrap(mail.from).first
+          receive.unique_id = pop_mail.unique_id
+          receive.message_id = message.message_id
+          receive.email = Array.wrap(message.from).first
 
           receive.save!
 
