@@ -41,14 +41,13 @@ module Ans::EmailReceiver
       end
     end
     def receive(mail)
-      body = mail.pop
-      EmailReceive.receive(body) do |email_receive|
+      EmailReceive.receive(mail) do |email_receive|
         mailer.receive email_receive.body
         email_receive.reload
         mail.delete if email_receive.email_queue.present? || delete?(email_receive)
       end
     rescue => e
-      error e, body
+      error e, mail.body
     end
 
     private
