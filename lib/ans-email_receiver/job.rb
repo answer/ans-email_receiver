@@ -19,24 +19,10 @@ module Ans::EmailReceiver
       return if [host,port,user,password].any?{|s| s.blank?}
 
       EmailReceive.old.delete_all
-      last_unique_id = EmailReceive.order("id desc").limit(1).pluck(:unique_id)
 
       Net::POP3.start(host, port, user, password) do |pop|
-        mails = pop.mails
-
-        # 最後の unique_id が取得できなければ、全て処理する
-        is_match_unique_id = !last_unique_id
-
-        mails.each do |mail|
-          # 最後の unique_id が見つかった後から処理を開始する
-          receive mail if is_match_unique_id
-          is_match_unique_id ||= last_unique_id == mail.unique_id
-        end
-
-        # 前に処理したメールが削除済みの場合、最後の unique_id にマッチするメールはない
-        # この場合、全て処理するべき
-        unless is_match_unique_id
-          mails.each{|mail| receive mail}
+        pop.mails.each do |mail|
+          receive mail if EmailReceive.where(unique_id: mail.unique_id).blank?
         end
       end
     end
@@ -47,7 +33,7 @@ module Ans::EmailReceiver
         mail.delete if email_receive.email_queue.present? || delete?(email_receive)
       end
     rescue => e
-      error e, mail.body
+      error e, mail.pop
     end
 
     private
