@@ -34,7 +34,6 @@ module Ans::EmailReceiver
         end
 
       rescue ActiveRecord::RecordInvalid
-      ensure
         unless message
           receive = new
           receive.body = body
