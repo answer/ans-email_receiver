@@ -28,7 +28,7 @@ module Ans::EmailReceiver
     end
     def receive(mail)
       EmailReceive.receive(mail) do |email_receive|
-        if mail.bounced?
+        if email_receive.mail.bounced?
           email_receive.bounced
         end
         email_receive.reload
