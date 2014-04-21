@@ -28,9 +28,11 @@ module Ans::EmailReceiver
     end
     def receive(mail)
       EmailReceive.receive(mail) do |email_receive|
-        mailer.receive email_receive.body
+        if mail.bounced?
+          email_receive.bounced
+        end
         email_receive.reload
-        mail.delete if email_receive.email_queue.present? || delete?(email_receive)
+        mail.delete if email_receive.email_queue.present?
       end
     rescue => e
       error e, mail.pop
